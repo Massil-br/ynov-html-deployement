@@ -49,3 +49,7 @@ Stage "Déployer sur ynov.local" skipped due to earlier failure(s)
 [Pipeline] End of Pipeline
 ERROR: script returned exit code 1
 Finished: FAILURE
+
+
+sudo chown -R jenkins:jenkins /var/www/test.ynov.local/
+sudo chmod -R 755 /var/www/test.ynov.local/
