@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+    stages {
+        stage('Cloner le dépôt') {
+            steps {
+                git 'https://github.com/<votre-utilisateur>/ynov-html-deployment.git'
+            }
+        }
+        stage('Déployer sur test.ynov.local') {
+            steps {
+                sh '''
+                # Copie du fichier index.html dans le répertoire test.ynov.local
+                cp index.html /var/www/test.ynov.local/
+                '''
+            }
+        }
+        stage('Vérifier le site') {
+            steps {
+                script {
+                    // Tester si l'accès à test.ynov.local est correct
+                    def status = sh(script: "curl -o /dev/null -s -w '%{http_code}' http://test.ynov.local/index.html", returnStdout: true).trim()
+                    if (status == "403" || status == "404") {
+                        error "Erreur HTTP détectée : ${status}"
+                    }
+                }
+            }
+        }
+        stage('Déployer sur ynov.local') {
+            steps {
+                sh '''
+                # Déplacement de index.html vers le répertoire ynov.local si tout est OK
+                mv /var/www/test.ynov.local/index.html /var/www/ynov.local/
+                '''
+            }
+        }
+    }
+}
