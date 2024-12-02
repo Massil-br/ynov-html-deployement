@@ -1,43 +1,3 @@
-pipeline {
-    agent any
-    stages {
-        stage('Cloner le dépôt') {
-            steps {
-                git 'https://github.com/<votre-utilisateur>/ynov-html-deployment.git'
-            }
-        }
-        stage('Déployer sur test.ynov.local') {
-            steps {
-                sh '''
-                # Copie du fichier index.html dans le répertoire test.ynov.local
-                cp index.html /var/www/test.ynov.local/
-                '''
-            }
-        }
-        stage('Vérifier le site') {
-            steps {
-                script {
-                    // Tester si l'accès à test.ynov.local est correct
-                    def status = sh(script: "curl -o /dev/null -s -w '%{http_code}' http://test.ynov.local/index.html", returnStdout: true).trim()
-                    if (status == "403" || status == "404") {
-                        error "Erreur HTTP détectée : ${status}"
-                    }
-                }
-            }
-        }
-        stage('Déployer sur ynov.local') {
-            steps {
-                sh '''
-                # Déplacement de index.html vers le répertoire ynov.local si tout est OK
-                mv /var/www/test.ynov.local/index.html /var/www/ynov.local/
-                '''
-            }
-        }
-    }
-}
-
-
-
 Started by user massil braik
 [Pipeline] Start of Pipeline
 [Pipeline] node
@@ -55,40 +15,21 @@ Fetching upstream changes from https://github.com/Massil-br/ynov-html-deployemen
  > git --version # timeout=10
  > git --version # 'git version 2.39.5'
  > git fetch --tags --force --progress -- https://github.com/Massil-br/ynov-html-deployement.git +refs/heads/*:refs/remotes/origin/* # timeout=10
-ERROR: Error fetching remote repo 'origin'
-hudson.plugins.git.GitException: Failed to fetch from https://github.com/Massil-br/ynov-html-deployement.git
-	at PluginClassLoader for git//hudson.plugins.git.GitSCM.fetchFrom(GitSCM.java:997)
-	at PluginClassLoader for git//hudson.plugins.git.GitSCM.retrieveChanges(GitSCM.java:1239)
-	at PluginClassLoader for git//hudson.plugins.git.GitSCM._checkout(GitSCM.java:1310)
-	at PluginClassLoader for git//hudson.plugins.git.GitSCM.checkout(GitSCM.java:1277)
-	at PluginClassLoader for workflow-scm-step//org.jenkinsci.plugins.workflow.steps.scm.SCMStep.checkout(SCMStep.java:136)
-	at PluginClassLoader for workflow-scm-step//org.jenkinsci.plugins.workflow.steps.scm.SCMStep$StepExecutionImpl.run(SCMStep.java:101)
-	at PluginClassLoader for workflow-scm-step//org.jenkinsci.plugins.workflow.steps.scm.SCMStep$StepExecutionImpl.run(SCMStep.java:88)
-	at PluginClassLoader for workflow-step-api//org.jenkinsci.plugins.workflow.steps.SynchronousNonBlockingStepExecution.lambda$start$0(SynchronousNonBlockingStepExecution.java:47)
-	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
-	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-	at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: hudson.plugins.git.GitException: Command "git fetch --tags --force --progress -- https://github.com/Massil-br/ynov-html-deployement.git +refs/heads/*:refs/remotes/origin/*" returned status code 128:
-stdout: 
-stderr: remote: Support for password authentication was removed on August 13, 2021.
-remote: Please see https://docs.github.com/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls for information on currently recommended modes of authentication.
-fatal: Authentication failed for 'https://github.com/Massil-br/ynov-html-deployement.git/'
-
-	at PluginClassLoader for git-client//org.jenkinsci.plugins.gitclient.CliGitAPIImpl.launchCommandIn(CliGitAPIImpl.java:2848)
-	at PluginClassLoader for git-client//org.jenkinsci.plugins.gitclient.CliGitAPIImpl.launchCommandWithCredentials(CliGitAPIImpl.java:2184)
-	at PluginClassLoader for git-client//org.jenkinsci.plugins.gitclient.CliGitAPIImpl$1.execute(CliGitAPIImpl.java:635)
-	at PluginClassLoader for git//hudson.plugins.git.GitSCM.fetchFrom(GitSCM.java:995)
-	... 12 more
-ERROR: Error fetching remote repo 'origin'
-ERROR: Maximum checkout retry attempts reached, aborting
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 0bf7d2c827aba3ac44379c31537b63358eeb2db8 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 0bf7d2c827aba3ac44379c31537b63358eeb2db8 # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git checkout -b main 0bf7d2c827aba3ac44379c31537b63358eeb2db8 # timeout=10
+Commit message: "ajkjn"
+First time build. Skipping changelog.
 [Pipeline] }
 [Pipeline] // stage
 [Pipeline] stage
 [Pipeline] { (Déployer sur test.ynov.local)
-Stage "Déployer sur test.ynov.local" skipped due to earlier failure(s)
-[Pipeline] getContext
+[Pipeline] sh
++ cp index.html /var/www/test.ynov.local/
+cp: cannot create regular file '/var/www/test.ynov.local/': Not a directory
 [Pipeline] }
 [Pipeline] // stage
 [Pipeline] stage
@@ -106,7 +47,5 @@ Stage "Déployer sur ynov.local" skipped due to earlier failure(s)
 [Pipeline] }
 [Pipeline] // node
 [Pipeline] End of Pipeline
-ERROR: Error fetching remote repo 'origin'
+ERROR: script returned exit code 1
 Finished: FAILURE
-
-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
