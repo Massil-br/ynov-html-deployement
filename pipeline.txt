@@ -35,3 +35,76 @@ pipeline {
         }
     }
 }
+
+
+
+Started by user massil braik
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/Deploy_Test
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Cloner le dépôt)
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/Deploy_Test/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/Massil-br/ynov-html-deployement.git # timeout=10
+Fetching upstream changes from https://github.com/Massil-br/ynov-html-deployement.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/Massil-br/ynov-html-deployement.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ERROR: Error fetching remote repo 'origin'
+hudson.plugins.git.GitException: Failed to fetch from https://github.com/Massil-br/ynov-html-deployement.git
+	at PluginClassLoader for git//hudson.plugins.git.GitSCM.fetchFrom(GitSCM.java:997)
+	at PluginClassLoader for git//hudson.plugins.git.GitSCM.retrieveChanges(GitSCM.java:1239)
+	at PluginClassLoader for git//hudson.plugins.git.GitSCM._checkout(GitSCM.java:1310)
+	at PluginClassLoader for git//hudson.plugins.git.GitSCM.checkout(GitSCM.java:1277)
+	at PluginClassLoader for workflow-scm-step//org.jenkinsci.plugins.workflow.steps.scm.SCMStep.checkout(SCMStep.java:136)
+	at PluginClassLoader for workflow-scm-step//org.jenkinsci.plugins.workflow.steps.scm.SCMStep$StepExecutionImpl.run(SCMStep.java:101)
+	at PluginClassLoader for workflow-scm-step//org.jenkinsci.plugins.workflow.steps.scm.SCMStep$StepExecutionImpl.run(SCMStep.java:88)
+	at PluginClassLoader for workflow-step-api//org.jenkinsci.plugins.workflow.steps.SynchronousNonBlockingStepExecution.lambda$start$0(SynchronousNonBlockingStepExecution.java:47)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: hudson.plugins.git.GitException: Command "git fetch --tags --force --progress -- https://github.com/Massil-br/ynov-html-deployement.git +refs/heads/*:refs/remotes/origin/*" returned status code 128:
+stdout: 
+stderr: remote: Support for password authentication was removed on August 13, 2021.
+remote: Please see https://docs.github.com/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls for information on currently recommended modes of authentication.
+fatal: Authentication failed for 'https://github.com/Massil-br/ynov-html-deployement.git/'
+
+	at PluginClassLoader for git-client//org.jenkinsci.plugins.gitclient.CliGitAPIImpl.launchCommandIn(CliGitAPIImpl.java:2848)
+	at PluginClassLoader for git-client//org.jenkinsci.plugins.gitclient.CliGitAPIImpl.launchCommandWithCredentials(CliGitAPIImpl.java:2184)
+	at PluginClassLoader for git-client//org.jenkinsci.plugins.gitclient.CliGitAPIImpl$1.execute(CliGitAPIImpl.java:635)
+	at PluginClassLoader for git//hudson.plugins.git.GitSCM.fetchFrom(GitSCM.java:995)
+	... 12 more
+ERROR: Error fetching remote repo 'origin'
+ERROR: Maximum checkout retry attempts reached, aborting
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Déployer sur test.ynov.local)
+Stage "Déployer sur test.ynov.local" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Vérifier le site)
+Stage "Vérifier le site" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Déployer sur ynov.local)
+Stage "Déployer sur ynov.local" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+ERROR: Error fetching remote repo 'origin'
+Finished: FAILURE
